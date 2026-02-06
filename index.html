@@ -5,29 +5,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YuppiLand</title>
 
-<!-- Font Awesome CDN -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 *{box-sizing:border-box;}
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#f4fbff;
-    color:#222;
-    transition:.3s;
-}
-body.dark {background: linear-gradient(135deg, #0a1a3b, #13264f, #1b3270); color:#fff;}
+body{margin:0;font-family:Arial,sans-serif;background:#f4fbff;color:#222;transition:.3s;}
+body.light{background:#f4fbff;color:#222;}
+body.dark{background:linear-gradient(135deg,#0a1a3b,#13264f,#1b3270);color:#fff;}
 
 /* HEADER */
 .header{background:#2fa4aa;height:120px;border-bottom-left-radius:60% 35px;border-bottom-right-radius:70% 35px;position:relative;}
-.theme-toggle{position:absolute;top:14px;left:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;cursor:pointer;}
-.theme-toggle::before{content:"";width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:-6px 0 0 0 #2fa4aa;transition:.3s;}
-body.dark .theme-toggle::before{width:18px;height:18px;background:#ffd54f;box-shadow:0 -10px 0 -7px #ffd54f,0 10px 0 -7px #ffd54f,10px 0 0 -7px #ffd54f,-10px 0 0 -7px #ffd54f;}
+
+/* THEME TOGGLE */
+.theme-toggle{
+    position:absolute;
+    top:14px;
+    left:14px;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:rgba(255,255,255,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:.3s;
+}
+.theme-toggle i{
+    color:#fff;
+    font-size:18px;
+    transition:.3s;
+    position:absolute;
+}
+#moonIcon{display:none;}
+#sunIcon{display:none;}
+body.light #sunIcon{display:block;}
+body.light #moonIcon{display:none;}
+body.dark #moonIcon{display:block;}
+body.dark #sunIcon{display:none;}
 
 /* LOGO */
 .logo-wrap{position:relative;height:55px;}
-.logo{width:110px;height:110px;background:#fff;border-radius:50%;position:absolute;left:50%;top:-55px;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 25px rgba(0,0,0,.25);z-index:10;}
+.logo{width:110px;height:110px;background:#fff;border-radius:50%;position:absolute;left:50%;top:-55px;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 25px rgba(0,0,0,.25);}
 .logo img{width:80px;}
 
 /* CONTENT */
@@ -36,7 +55,7 @@ h1{font-size:22px;margin-bottom:8px;color:inherit;}
 h1 span{font-weight:bold;}
 
 /* RATING */
-.rating-container{margin:70px 0 20px;}
+.rating-container{margin:35px 0 20px;} /* Logo ilə məsafə azaldıldı */
 .rating{margin:10px 0;}
 .star{font-size:32px;color:#ccc;cursor:pointer;transition:.2s;}
 .star.active{color:#ffc107;}
@@ -47,23 +66,31 @@ body.dark .star.active{color:#ffd700;text-shadow:0 0 5px #ffd700,0 0 10px #ffd70
 /* REVIEW BOX */
 .review-box{
     display:none;
-    margin-top:15px;
+    opacity:0;
+    transform:translateY(-20px);
+    transition:.4s ease;
+    margin-top:20px;
     background:rgba(255,255,255,0.95);
     padding:20px;
     max-width:360px;
     margin-left:auto;
     margin-right:auto;
-    border-radius:12px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.25);
+    border-radius:15px;
+    box-shadow:0 6px 18px rgba(0,0,0,.25);
     color:#000;
+}
+.review-box.show{
+    display:block;
+    opacity:1;
+    transform:translateY(0);
 }
 body.dark .review-box{background:rgba(30,30,30,0.95); color:#fff;}
 .review-box input, .review-box textarea{
-    width:100%; margin:10px 0; padding:12px; border-radius:8px; border:1px solid #ccc;
+    width:100%; margin:10px 0; padding:12px; border-radius:10px; border:1px solid #ccc;
 }
 body.dark .review-box input, body.dark .review-box textarea{border:1px solid #555; background:#1e1e1e; color:#fff;}
 .review-box button{
-    width:100%; padding:12px; border:none; border-radius:8px; background:#2fa4aa; color:#fff; font-weight:bold; cursor:pointer; transition:.3s;
+    width:100%; padding:12px; border:none; border-radius:10px; background:#2fa4aa; color:#fff; font-weight:bold; cursor:pointer; transition:.3s;
 }
 .review-box button:hover{background:#1d7c80;}
 
@@ -71,8 +98,20 @@ body.dark .review-box input, body.dark .review-box textarea{border:1px solid #55
 .menu-card{background:#2fa4aa;color:#fff;max-width:360px;margin:20px auto;padding:18px;border-radius:12px;display:flex;justify-content:space-between;cursor:pointer;animation:pulse 1.4s infinite;}
 @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
 
+/* AÇILIŞ SAATLARI KONTEYNERİ */
+.opening-hours{
+    max-width:360px;
+    margin:15px auto;
+    padding:15px;
+    background:rgba(47,164,170,0.1);
+    border-radius:12px;
+    font-size:15px;
+    color:#222;
+}
+body.dark .opening-hours{background:rgba(47,164,170,0.2); color:#fff;}
+
 /* FOOTER */
-.footer{margin-top:25px;font-size:14px;color:inherit;text-align:center;}
+.footer{margin-top:15px;font-size:14px;color:inherit;text-align:center;}
 #message{margin-top:10px;font-weight:bold;color:#4caf50;}
 
 /* Sosial düymələr */
@@ -85,7 +124,13 @@ body.dark .social-btn:hover{color:#ffd54f;}
 </head>
 
 <body>
-<div class="header"><div class="theme-toggle" id="themeToggle"></div></div>
+<div class="header">
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon" id="moonIcon"></i>
+        <i class="fas fa-sun" id="sunIcon"></i>
+    </div>
+</div>
+
 <div class="logo-wrap"><div class="logo"><img src="logo.png" alt="YuppiLand"></div></div>
 
 <div class="content">
@@ -95,7 +140,6 @@ body.dark .social-btn:hover{color:#ffd54f;}
     <div class="rating" id="stars"></div>
     <div id="ratingText">Dəyərləndirin ⭐</div>
 
-    <!-- REVIEW BOX -->
     <div class="review-box" id="reviewBox">
         <form id="reviewForm">
             <input type="text" id="nameInput" name="name" placeholder="Adınız" required>
@@ -109,6 +153,12 @@ body.dark .social-btn:hover{color:#ffd54f;}
 
 <div class="menu-card" onclick="alert('Menyu buraya bağlanacaq')"><span>📖 Menyuya baxın</span><span>›</span></div>
 
+<!-- Yeni Açılış Saatları Konteyneri -->
+<div class="opening-hours">
+    <strong>Açılış Saatları:</strong><br>
+    Hər gün: 10:00 – 23:00
+</div>
+
 <div class="footer">
 <div>Əlaqə: xxxxxxx</div>
 <div>Məkan — Binə atçılıq mərkəzinin yaxınlığı</div>
@@ -120,10 +170,29 @@ body.dark .social-btn:hover{color:#ffd54f;}
 </div>
 
 <script>
-/* THEME */
-const toggle=document.getElementById("themeToggle");
-if(localStorage.getItem("theme")==="dark") document.body.classList.add("dark");
-toggle.onclick=()=>{document.body.classList.toggle("dark"); localStorage.setItem("theme",document.body.classList.contains("dark")?"dark":"light");};
+/* THEME TOGGLE */
+const toggle = document.getElementById("themeToggle");
+const body = document.body;
+
+if(localStorage.getItem("theme")==="dark") {
+    body.classList.add("dark");
+    body.classList.remove("light");
+} else {
+    body.classList.add("light");
+    body.classList.remove("dark");
+}
+
+toggle.onclick = () => {
+    if(body.classList.contains("dark")){
+        body.classList.remove("dark");
+        body.classList.add("light");
+        localStorage.setItem("theme","light");
+    } else {
+        body.classList.remove("light");
+        body.classList.add("dark");
+        localStorage.setItem("theme","dark");
+    }
+};
 
 /* RATING */
 const starBox=document.getElementById("stars");
@@ -149,18 +218,18 @@ function drawStars(avg=0){
 function openReviewForm(val){
     selected=val;
     ulduzInput.value=val;
-    reviewBox.style.display="block";
+    reviewBox.classList.add("show");
     drawStars(val);
     reviewBox.scrollIntoView({behavior:"smooth"});
 }
 
 drawStars();
 
-/* Formspree AJAX gönderimi */
+/* Formspree AJAX */
 reviewForm.addEventListener("submit", function(e){
     e.preventDefault();
     const formData = new FormData(reviewForm);
-    fetch("https://formspree.io/f/xlgwrvrv", {  // sənin Formspree linkini buraya yaz
+    fetch("https://formspree.io/f/xlgwrvrv", {
         method:"POST",
         body: formData,
         headers: {"Accept": "application/json"}
@@ -168,7 +237,7 @@ reviewForm.addEventListener("submit", function(e){
     .then(response=>{
         if(response.ok){
             message.innerText="Rəyiniz üçün təşəkkür edirik 💙";
-            reviewBox.style.display="none";
+            reviewBox.classList.remove("show");
             reviewForm.reset();
             drawStars(selected);
         } else {
