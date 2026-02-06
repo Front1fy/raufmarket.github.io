@@ -3,228 +3,275 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rauf Market | Neon Qəssab QR Menyusu</title>
+<title>YuppiLand</title>
+
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
+*{box-sizing:border-box}
 body{
     margin:0;
-    font-family:'Segoe UI',sans-serif;
-    background:#050505;
-    color:#fff;
+    font-family:Arial,sans-serif;
+    background:#f4fbff;
+    color:#222;
+    transition:.3s;
+}
+
+/* Qaranlıq mod arxa fonu - tünd göy/mavi tonları və ağ yazılar */
+body.dark {
+    background: linear-gradient(135deg, #0a1a3b, #13264f, #1b3270);
+    color: #fff; /* Bütün yazılar ağ olacaq */
 }
 
 /* HEADER */
 .header{
-    padding:40px 15px 60px;
-    text-align:center;
-    background:radial-gradient(circle, rgba(255,0,0,0.4), #120000);
-    box-shadow:0 0 20px rgba(255,0,0,0.5);
-}
-.header h1{
-    margin:0;
-    font-size:36px;
-    letter-spacing:3px;
-    text-shadow:0 0 8px rgba(255,26,26,0.7);
-}
-.header p{
-    margin-top:8px;
-    color:#ffffff; /* Ağ rəng */
-    text-shadow:0 0 4px rgba(255,0,0,0.5);
-    font-size:15px;
+    background:#2fa4aa;
+    height:120px;
+    border-bottom-left-radius:60% 35px;
+    border-bottom-right-radius:70% 35px;
+    position:relative;
 }
 
-/* LOGO */
-.logo-wrap{
-    position:relative;
-    margin:-45px auto 15px;
-    width:100px;
-    height:100px;
+/* DARK MODE TOGGLE */
+.theme-toggle{
+    position:absolute;
+    top:14px;
+    left:14px;
+    width:38px;
+    height:38px;
     border-radius:50%;
-    background:#000;
-    border:3px solid #ff0000;
-    box-shadow:
-        0 0 15px #ff0000,
-        0 0 30px rgba(255,0,0,0.7);
+    background:rgba(255,255,255,.25);
     display:flex;
     align-items:center;
     justify-content:center;
-    z-index:10;
+    cursor:pointer;
 }
-.logo-wrap img{
-    width:110%;
-    height:110%;
-    object-fit:contain;
-    border-radius:50%;
+.theme-toggle::before{
+    content:"";
+    width:16px;height:16px;border-radius:50%;
+    background:#fff;box-shadow:-6px 0 0 0 #2fa4aa;transition:.3s;
 }
-
-/* CONTAINER */
-.container{
-    max-width:650px;
-    margin:auto;
-    padding:20px;
+body.dark .theme-toggle::before{
+    width:18px;height:18px;background:#ffd54f;
+    box-shadow:0 -10px 0 -7px #ffd54f,0 10px 0 -7px #ffd54f,10px 0 0 -7px #ffd54f,-10px 0 0 -7px #ffd54f;
 }
 
-/* CARD */
-.card{
-    background:#0c0c0c;
-    border-radius:18px;
-    margin-bottom:25px;
-    box-shadow:0 0 25px rgba(255,0,0,0.25);
-    overflow:hidden;
-    border:1px solid #2a0000;
+/* LOGO */
+.logo-wrap{position:relative;height:55px;}
+.logo{
+    width:110px;height:110px;background:#fff;border-radius:50%;
+    position:absolute;left:50%;top:-55px;transform:translateX(-50%);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.25);z-index:10;
 }
-.card img{
-    width:100%;
-    height:200px;
-    object-fit:cover;
-    filter:brightness(0.9);
-}
+.logo img{width:80px;}
 
 /* CONTENT */
-.content{
-    padding:15px;
+.content{text-align:center;padding:15px;}
+h1{
+    font-size:22px;
+    margin-bottom:8px;
+    color: inherit; /* Qaranlıq modda ağ olacaq */
 }
-.content h2{
-    margin:0 0 10px;
-    color:#ff2a2a;
-    text-shadow:0 0 8px #ff0000;
-}
-.item{
-    display:flex;
-    justify-content:space-between;
-    padding:8px 0;
-    border-bottom:1px dashed #330000;
-}
-.item:last-child{border-bottom:none;}
-.price{
-    color:#ffd1d1;
-    font-weight:bold;
-}
-.content p{
-    margin-top:5px;
-    font-size:14px;
-    color:#ff9999;
+h1 span{
+    font-weight:bold; /* Başlıq qalın olacaq */
 }
 
-/* INFO */
-.info{
-    background:#0b0000;
-    border:2px solid #ff0000;
-    border-radius:15px;
-    padding:18px;
-    box-shadow:0 0 25px #ff0000;
-    text-align:center;
+/* REY */
+.rating-container{margin:70px 0 20px;}
+.rating{margin:10px 0;}
+.star{
+    font-size:32px;
+    color:#ccc;
+    cursor:pointer;
+    transition:.2s;
 }
+/* Aktiv ulduz normal */
+.star.active{color:#ffc107;}
+
+/* Qara rejimdə parlayan ulduz */
+body.dark .star.active{
+    color:#ffd700;
+    text-shadow:
+        0 0 5px #ffd700,
+        0 0 10px #ffd700,
+        0 0 15px #ffd700,
+        0 0 20px #ffd700;
+}
+
+/* Hover zamanı canlı parlaq effekti */
+.star:hover{
+    color:#ffd700;
+    text-shadow:0 0 5px #ffd700,0 0 10px #ffd700,0 0 15px #ffd700;
+}
+
+#ratingText,#countText{font-size:14px;color:inherit;margin:2px 0;} /* inherit ağ olacaq */
+
+/* REVIEW MODAL */
+.review-box{
+    display:none;
+    margin-top:10px;
+    background:#fff;padding:15px;
+    max-width:360px;margin-left:auto;margin-right:auto;
+    border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.2);
+    color:#000;
+}
+.review-box textarea,input{
+    width:100%;margin:8px 0;padding:10px;border-radius:6px;border:1px solid #ccc;
+}
+.review-box button{
+    padding:10px 20px;border:none;background:#2fa4aa;color:#fff;border-radius:8px;cursor:pointer;
+}
+
+/* MENU */
+.menu-card{
+    background:#2fa4aa;color:#fff;max-width:360px;margin:20px auto;padding:18px;border-radius:12px;
+    display:flex;justify-content:space-between;cursor:pointer;animation:pulse 1.4s infinite;
+}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
 
 /* FOOTER */
-.footer{
-    text-align:center;
-    padding:15px;
-    color:#aaa;
-    font-size:13px;
+.footer{margin-top:25px;font-size:14px;color:inherit;text-align:center;}
+#message{margin-top:10px;color:#4caf50;font-weight:bold;}
+
+/* Sosial düymələr logolar */
+.social-buttons{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin-top:10px;
+}
+.social-btn{
+    font-size:28px;
+    color:#2fa4aa; /* gündüz modda görünən rəng */
+    text-decoration:none;
+    transition:0.3s;
+}
+.social-btn:hover{
+    color:#1d7c80; /* gündüz hover effekti */
+}
+body.dark .social-btn{
+    color:#fff; /* qaranlıq modda ağ rəng */
+}
+body.dark .social-btn:hover{
+    color:#ffd54f; /* qaranlıq hover effekti */
 }
 </style>
 </head>
 
 <body>
+<div class="header"><div class="theme-toggle" id="themeToggle"></div></div>
 
-<div class="header">
-    <h1>RAUF MARKET</h1>
-    <p>
-        📞 Əlaqə:
-        <a href="tel:0516700202" style="color:#ffffff; text-decoration:none; font-weight:bold;">
-        051 670 02 02
-        </a>
-    </p>
-</div>
-
-<!-- LOGO -->
 <div class="logo-wrap">
-    <img src="img/logo.png"
-         onerror="this.onerror=null; this.src='ımg/WhatsApp Image 2026-01-30 at 13.25.51.jpeg';">
+    <div class="logo">
+        <img src="logo.png" alt="YuppiLand">
+    </div>
 </div>
 
-<div class="container">
-
-<div class="card">
-<img src="ımg/resize.jpg">
 <div class="content">
-<h2>🥩 Quzu əti</h2>
-<div class="item"><span>1 kq</span><span class="price">20 AZN</span></div>
-</div>
+    <h1><span>YuppiLand Əyləncə Mərkəzi</span></h1>
+
+    <!-- REY -->
+    <div class="rating-container">
+        <div class="rating" id="stars"></div>
+        <div id="ratingText"></div>
+        <div id="countText"></div>
+
+        <div class="review-box" id="reviewBox">
+            <input type="text" id="nameInput" placeholder="Adınız" required>
+            <textarea id="commentInput" placeholder="Rəyinizi yazın..." required></textarea>
+            <input type="hidden" id="ulduzInput">
+            <button id="submitReview">Göndər</button>
+        </div>
+        <div id="message"></div>
+    </div>
+
+    <!-- MENYU -->
+    <div class="menu-card" onclick="alert('Menyu buraya bağlanacaq')">
+        <span>📖 Menyuya baxın</span><span>›</span>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div>Əlaqə: xxxxxxx</div>
+        <div>Məkan — Binə atçılıq mərkəzinin yaxınlığı</div>
+
+        <!-- Sosial düymələr logolar -->
+        <div class="social-buttons">
+            <a href="https://www.tiktok.com/" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.instagram.com/" target="_blank" class="social-btn"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/xxxxxxx" target="_blank" class="social-btn"><i class="fab fa-whatsapp"></i></a>
+        </div>
+    </div>
 </div>
 
-<div class="card">
-<img src="ımg/hq720.jpg">
-<div class="content">
-<h2>🥩 Quzu ciyəri</h2>
-<div class="item"><span>1 kq</span><span class="price">15 AZN</span></div>
-</div>
-</div>
+<script>
+/* THEME */
+const toggle=document.getElementById("themeToggle");
+if(localStorage.getItem("theme")==="dark") document.body.classList.add("dark");
+toggle.onclick=()=>{
+    document.body.classList.toggle("dark");
+    localStorage.setItem("theme",document.body.classList.contains("dark")?"dark":"light");
+};
 
-<div class="card">
-<img src="ımg/30087528.webp">
-<div class="content">
-<h2>🦴 Quzu çənəsi</h2>
-<div class="item"><span>1 ədəd</span><span class="price">1.50 AZN</span></div>
-</div>
-</div>
+/* RATING */
+const starBox=document.getElementById("stars");
+const ratingText=document.getElementById("ratingText");
+const countText=document.getElementById("countText");
+const reviewBox=document.getElementById("reviewBox");
+const nameInput=document.getElementById("nameInput");
+const commentInput=document.getElementById("commentInput");
+const ulduzInput=document.getElementById("ulduzInput");
+const message=document.getElementById("message");
 
-<div class="card">
-<img src="ımg/1900000160.webp">
-<div class="content">
-<h2>🔥 Quyruq</h2>
-<div class="item"><span>1 kq</span><span class="price">20 AZN</span></div>
-</div>
-</div>
+let reviews=JSON.parse(localStorage.getItem("reviews")||"[]");
+let selected=0;
 
-<div class="card">
-<img src="ımg/keci-eti-yenir-mi-d67f6de7-25eb-4c41-be4c-06d6b253f6d8.jpg">
-<div class="content">
-<h2>🐐 Çəpiş əti</h2>
-<div class="item"><span>1 kq</span><span class="price">17 AZN</span></div>
-<p>8–9 kq-lıq</p>
-</div>
-</div>
+function drawStars(avg=0){
+    starBox.innerHTML="";
+    for(let i=1;i<=5;i++){
+        let s=document.createElement("span");
+        s.innerText="★";
+        s.className="star"+(i<=avg?" active":"");
+        s.onclick=()=>openReviewForm(i);
+        starBox.appendChild(s);
+    }
+}
 
-<div class="card">
-<img src="ımg/maxresdefault.jpg">
-<div class="content">
-<h2>🐑 Baş-ayaq</h2>
-<div class="item"><span>Ütülmüş</span><span class="price">7 AZN</span></div>
-<div class="item"><span>Ütülməmiş</span><span class="price">2.50 AZN</span></div>
-</div>
-</div>
+function openReviewForm(val){
+    selected=val;
+    ulduzInput.value=val;
+    reviewBox.style.display="block";
+    drawStars(val);
+    nameInput.focus();
+}
 
-<div class="card">
-<img src="ımg/c9ea4d9a-ef11-11ed-8bc2-668575e409bd_24.avif">
-<div class="content">
-<h2>🧀 Qoyun pendiri</h2>
-<div class="item"><span>1 kq</span><span class="price">9 AZN</span></div>
-</div>
-</div>
+function updateStats(){
+    if(!reviews.length){
+        ratingText.innerText="Dəyərləndirin";
+        countText.innerText="";
+        drawStars();
+        return;
+    }
+    let avg=(reviews.reduce((a,b)=>a+b,0)/reviews.length).toFixed(2);
+    ratingText.innerText="Ortalama: "+avg+" ⭐";
+    countText.innerText="Rəy sayı: "+reviews.length;
+    drawStars(Math.round(avg));
+}
 
-<div class="card">
-<img src="ımg/Nehrə-yagi.jpg">
-<div class="content">
-<h2>🧈 Təmiz yağ</h2>
-<div class="item"><span>1 kq</span><span class="price">17 AZN</span></div>
-</div>
-</div>
+document.getElementById("submitReview").onclick=e=>{
+    e.preventDefault();
+    if(!nameInput.value.trim() || !commentInput.value.trim()) return;
+    reviews.push(selected);
+    localStorage.setItem("reviews",JSON.stringify(reviews));
+    message.innerText="Rəyiniz üçün təşəkkür edirik 💙";
+    reviewBox.style.display="none";
+    nameInput.value=""; commentInput.value="";
+    updateStats();
+};
 
-<div class="info">
-<b>📌 Əsas məlumat</b><br><br>
-Quzular <b>10–11–12 kq</b><br>
-Tam <b>əmlik quzulardır</b><br>
-Günlük təzə kəsim<br>
-Keyfiyyətə 100% zəmanət
-</div>
-
-</div>
-
-<div class="footer">
-© 2026 Rauf Market • Mingəçevir
-</div>
-
+updateStats();
+</script>
 </body>
 </html>
