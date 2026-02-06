@@ -52,14 +52,12 @@ body.dark #sunIcon{display:none;}
 /* CONTENT */
 .content{text-align:center;padding:15px;}
 h1{font-size:22px;margin-bottom:8px;color:inherit;}
-h1 span{font-weight:bold;}
+h1 span{font-weight:700;}
 
 /* RATING */
-.rating-container{margin:35px 0 20px;} /* Logo ilə məsafə azaldıldı */
+.rating-container{margin:35px 0 20px;}
 .rating{margin:10px 0;}
-.star{font-size:32px;color:#ccc;cursor:pointer;transition:.2s;}
-.star.active{color:#ffc107;}
-body.dark .star.active{color:#ffd700;text-shadow:0 0 5px #ffd700,0 0 10px #ffd700,0 0 15px #ffd700,0 0 20px #ffd700;}
+.star{font-size:32px;color:#ffc107;cursor:pointer;transition:.3s;text-shadow:0 0 5px #ffc107,0 0 10px #ffc107,0 0 15px #ffc107;}
 .star:hover{color:#ffd700;text-shadow:0 0 5px #ffd700,0 0 10px #ffd700,0 0 15px #ffd700;}
 #ratingText{font-size:14px;color:inherit;margin:2px 0;}
 
@@ -93,6 +91,7 @@ body.dark .review-box input, body.dark .review-box textarea{border:1px solid #55
     width:100%; padding:12px; border:none; border-radius:10px; background:#2fa4aa; color:#fff; font-weight:bold; cursor:pointer; transition:.3s;
 }
 .review-box button:hover{background:#1d7c80;}
+#closeReview{cursor:pointer; font-weight:bold; font-size:18px; float:right; margin-bottom:10px;}
 
 /* MENU */
 .menu-card{background:#2fa4aa;color:#fff;max-width:360px;margin:20px auto;padding:18px;border-radius:12px;display:flex;justify-content:space-between;cursor:pointer;animation:pulse 1.4s infinite;}
@@ -138,9 +137,10 @@ body.dark .social-btn:hover{color:#ffd54f;}
 
 <div class="rating-container">
     <div class="rating" id="stars"></div>
-    <div id="ratingText">Dəyərləndirin ⭐</div>
+    <div id="ratingText">Ortalama: 4.8 ⭐ (Rəy sayı: 280)</div>
 
     <div class="review-box" id="reviewBox">
+        <span id="closeReview">✖</span>
         <form id="reviewForm">
             <input type="text" id="nameInput" name="name" placeholder="Adınız" required>
             <textarea id="commentInput" name="comment" placeholder="Rəyinizi yazın..." required></textarea>
@@ -153,7 +153,6 @@ body.dark .social-btn:hover{color:#ffd54f;}
 
 <div class="menu-card" onclick="alert('Menyu buraya bağlanacaq')"><span>📖 Menyuya baxın</span><span>›</span></div>
 
-<!-- Yeni Açılış Saatları Konteyneri -->
 <div class="opening-hours">
     <strong>Açılış Saatları:</strong><br>
     Hər gün: 10:00 – 23:00
@@ -173,80 +172,75 @@ body.dark .social-btn:hover{color:#ffd54f;}
 /* THEME TOGGLE */
 const toggle = document.getElementById("themeToggle");
 const body = document.body;
+if(localStorage.getItem("theme")==="dark"){body.classList.add("dark");body.classList.remove("light");}else{body.classList.add("light");body.classList.remove("dark");}
+toggle.onclick = () => {body.classList.toggle("dark");body.classList.toggle("light");localStorage.setItem("theme",body.classList.contains("dark")?"dark":"light");};
 
-if(localStorage.getItem("theme")==="dark") {
-    body.classList.add("dark");
-    body.classList.remove("light");
-} else {
-    body.classList.add("light");
-    body.classList.remove("dark");
-}
-
-toggle.onclick = () => {
-    if(body.classList.contains("dark")){
-        body.classList.remove("dark");
-        body.classList.add("light");
-        localStorage.setItem("theme","light");
-    } else {
-        body.classList.remove("light");
-        body.classList.add("dark");
-        localStorage.setItem("theme","dark");
-    }
-};
-
-/* RATING */
+/* LOCAL STORAGE REY */
+let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+let count = 280;
 const starBox=document.getElementById("stars");
 const ratingText=document.getElementById("ratingText");
 const reviewBox=document.getElementById("reviewBox");
 const ulduzInput=document.getElementById("ulduzInput");
 const reviewForm=document.getElementById("reviewForm");
 const message=document.getElementById("message");
-
+const closeReview=document.getElementById("closeReview");
 let selected=0;
 
-function drawStars(avg=0){
+/* Draw stars */
+function drawStars(){
     starBox.innerHTML="";
     for(let i=1;i<=5;i++){
         let s=document.createElement("span");
         s.innerText="★";
-        s.className="star"+(i<=avg?" active":"");
+        s.className="star active"; // həmişə sarı
         s.onclick=()=>openReviewForm(i);
         starBox.appendChild(s);
     }
 }
+drawStars();
 
+/* Update rey sayı */
+function updateCount(){
+    ratingText.innerText="Ortalama: 4.8 ⭐ (Rəy sayı: "+(count+reviews.length)+")";
+}
+updateCount();
+
+/* Open form */
 function openReviewForm(val){
     selected=val;
     ulduzInput.value=val;
     reviewBox.classList.add("show");
-    drawStars(val);
-    reviewBox.scrollIntoView({behavior:"smooth"});
 }
 
-drawStars();
+/* Close form */
+closeReview.onclick = () => {
+    reviewBox.classList.remove("show");
+};
 
-/* Formspree AJAX */
-reviewForm.addEventListener("submit", function(e){
+/* Form submit */
+reviewForm.addEventListener("submit",function(e){
     e.preventDefault();
-    const formData = new FormData(reviewForm);
-    fetch("https://formspree.io/f/xlgwrvrv", {
+    const name = document.getElementById("nameInput").value.trim();
+    const comment = document.getElementById("commentInput").value.trim();
+    const star = parseInt(ulduzInput.value);
+    if(!name || !comment) return;
+
+    // Formspree göndər
+    fetch("https://formspree.io/f/xlgwrvrv",{
         method:"POST",
-        body: formData,
+        body: new FormData(reviewForm),
         headers: {"Accept": "application/json"}
-    })
-    .then(response=>{
-        if(response.ok){
-            message.innerText="Rəyiniz üçün təşəkkür edirik 💙";
-            reviewBox.classList.remove("show");
-            reviewForm.reset();
-            drawStars(selected);
-        } else {
-            message.innerText="Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.";
-        }
-    })
-    .catch(err=>{
-        message.innerText="Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.";
     });
+
+    // Rey localStorage-da saxla
+    reviews.push(star);
+    localStorage.setItem("reviews", JSON.stringify(reviews));
+
+    message.innerText="Rəyiniz üçün təşəkkür edirik 💙";
+    reviewBox.classList.remove("show");
+    reviewForm.reset();
+    updateCount();
 });
 </script>
 </body>
